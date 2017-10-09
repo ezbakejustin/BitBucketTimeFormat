@@ -1,0 +1,41 @@
+(function () {
+
+    var dateFormat = "MM/dd/yyyy HH:mm";
+
+    function updateTime() {
+        var _times = document.querySelectorAll("time:not(._no_relative_time_)");
+        if (_times && _times.length > 0)
+            _times.forEach(function (t, x) {
+                if (t && t.title) {
+                    t.innerHTML = Date.parse(t.title).toString(dateFormat);
+                    t.className += " _no_relative_time_";
+                }
+            });
+    }
+
+    var _interval;
+
+    function engage() {
+        clearInterval(_interval);
+        _interval = setInterval(updateTime, 1000);
+    }
+
+    chrome.storage.sync.get('dateformat', function (data) {
+        if (data && data.dateformat)
+            dateFormat = data.dateformat;
+    });
+
+    chrome.storage.sync.get('urls', function (data) {
+        var urls = data.urls;
+
+        if (urls && urls.trim() !== "") {
+            urls.split(",").forEach(function (url) {
+                if (window.location.href.match(url)) {
+                    engage();
+                }
+            });
+        }
+    });
+
+
+})();
