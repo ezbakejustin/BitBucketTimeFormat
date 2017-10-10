@@ -6,8 +6,16 @@
         var _times = document.querySelectorAll("time:not(._no_relative_time_)");
         if (_times && _times.length > 0)
             _times.forEach(function (t, x) {
-                if (t && t.title) {
-                    t.innerHTML = Date.parse(t.title).toString(dateFormat);
+                if (t) {
+                    console.log('T: ' + t);
+                    if (t.title) {
+                        t.innerHTML = Date.parse(t.title).toString(dateFormat);
+                        console.log('title update');
+                    }
+                    else if (t.hasAttribute('datetime')) {
+                        t.innerHTML = Date.parse(t.getAttribute('datetime')).toString(dateFormat);
+                        console.log('datetime update: ' + t);
+                    }
                     t.className += " _no_relative_time_";
                 }
             });
